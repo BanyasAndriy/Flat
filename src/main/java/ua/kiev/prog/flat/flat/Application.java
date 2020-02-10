@@ -1,13 +1,13 @@
-package ua.kiev.prog.oauth2.loginviagoogle;
+package ua.kiev.prog.flat.flat;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LoginViaGoogleApplication {
+public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(LoginViaGoogleApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
 }

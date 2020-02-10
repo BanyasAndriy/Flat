@@ -1,13 +1,13 @@
-package ua.kiev.prog.oauth2.loginviagoogle.controllers;
+package ua.kiev.prog.flat.flat.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import ua.kiev.prog.oauth2.loginviagoogle.model.Citizen;
-import ua.kiev.prog.oauth2.loginviagoogle.model.Flat;
-import ua.kiev.prog.oauth2.loginviagoogle.services.GeneralService;
+import ua.kiev.prog.flat.flat.model.Citizen;
+import ua.kiev.prog.flat.flat.model.Flat;
+import ua.kiev.prog.flat.flat.services.GeneralService;
 
 import java.util.ArrayList;
 import java.util.List;

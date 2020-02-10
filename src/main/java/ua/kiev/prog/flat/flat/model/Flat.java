@@ -1,4 +1,4 @@
-package ua.kiev.prog.oauth2.loginviagoogle.model;
+package ua.kiev.prog.flat.flat.model;
 
 
 import org.springframework.lang.Nullable;

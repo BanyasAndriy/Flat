@@ -1,9 +1,8 @@
-package ua.kiev.prog.oauth2.loginviagoogle.model;
+package ua.kiev.prog.flat.flat.model;
 
 
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 public class Citizen {

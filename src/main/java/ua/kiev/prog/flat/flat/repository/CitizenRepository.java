@@ -1,8 +1,7 @@
-package ua.kiev.prog.oauth2.loginviagoogle.repository;
+package ua.kiev.prog.flat.flat.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ua.kiev.prog.oauth2.loginviagoogle.model.Citizen;
-import ua.kiev.prog.oauth2.loginviagoogle.model.Flat;
+import ua.kiev.prog.flat.flat.model.Citizen;
 
 import java.util.List;
 

@@ -1,12 +1,12 @@
-package ua.kiev.prog.oauth2.loginviagoogle.services;
+package ua.kiev.prog.flat.flat.services;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.kiev.prog.oauth2.loginviagoogle.model.Citizen;
-import ua.kiev.prog.oauth2.loginviagoogle.model.Flat;
-import ua.kiev.prog.oauth2.loginviagoogle.repository.CitizenRepository;
-import ua.kiev.prog.oauth2.loginviagoogle.repository.FlatRepository;
+import ua.kiev.prog.flat.flat.model.Flat;
+import ua.kiev.prog.flat.flat.repository.CitizenRepository;
+import ua.kiev.prog.flat.flat.repository.FlatRepository;
+import ua.kiev.prog.flat.flat.model.Citizen;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,9 +15,9 @@ import java.util.Optional;
 public class GeneralService {
 
 @Autowired
-    FlatRepository flatRepository;
+FlatRepository flatRepository;
 @Autowired
-    CitizenRepository citizenRepository;
+CitizenRepository citizenRepository;
 
 public Flat getFlatById(Long id){
 
