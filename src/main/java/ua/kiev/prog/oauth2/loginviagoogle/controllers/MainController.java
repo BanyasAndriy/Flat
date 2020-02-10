@@ -1,100 +1,89 @@
 package ua.kiev.prog.oauth2.loginviagoogle.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.social.connect.Connection;
-import org.springframework.social.facebook.api.Facebook;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ua.kiev.prog.oauth2.loginviagoogle.dto.*;
-import ua.kiev.prog.oauth2.loginviagoogle.dto.results.BadRequestResult;
-import ua.kiev.prog.oauth2.loginviagoogle.dto.results.ResultDTO;
-import ua.kiev.prog.oauth2.loginviagoogle.dto.results.SuccessResult;
+import org.springframework.web.servlet.ModelAndView;
+import ua.kiev.prog.oauth2.loginviagoogle.model.Citizen;
+import ua.kiev.prog.oauth2.loginviagoogle.model.Flat;
 import ua.kiev.prog.oauth2.loginviagoogle.services.GeneralService;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-@RestController
+
+@Controller
 public class MainController {
 
-    private static final int PAGE_SIZE = 5;
 
     @Autowired
-    private GeneralService generalService;
+    GeneralService generalService;
 
-    @GetMapping("/account")
-    public AccountDTO account(OAuth2AuthenticationToken auth) {
-        Map<String, Object> attrs = auth.getPrincipal().getAttributes();
-
-
-
-      String network= auth.getAuthorizedClientRegistrationId();//name of network
-      String pictureUrl;
-      if (network.equals("facebook")){
-          String idUser=attrs.get("id").toString();
-          pictureUrl  ="http://graph.facebook.com/" + idUser + "/picture?type=square";
-
-      }else {
-          pictureUrl = (String) attrs.get("picture");
-      }
-
-
-        String email = (String) attrs.get("email");
-        String name = (String) attrs.get("name");
-
-
-        return AccountDTO.of(email, name, pictureUrl);
+    @RequestMapping(value="/")
+    String getMenu(){
+        return "menu";
     }
 
-    @GetMapping("count")
-    public PageCountDTO count(OAuth2AuthenticationToken auth) {
-        String email = getEmail(auth);
-        return PageCountDTO.of(generalService.count(email), PAGE_SIZE);
+
+    @RequestMapping(value="/addFlat")
+    String addFlat(){
+        return "addFlat";
     }
 
-    @GetMapping("tasks")
-    public List<TaskDTO> tasks(OAuth2AuthenticationToken auth,
-                               @RequestParam(required = false, defaultValue = "0")
-                                       Integer page) {
-        String email = getEmail(auth);
-
-        return generalService.getTasks(email,
-                PageRequest.of(
-                        page,
-                        PAGE_SIZE,
-                        Sort.Direction.DESC,
-                        "id"
-                )
-        );
+    @RequestMapping(value="/addResidents")
+    String addCitizen(){
+        return "addResidents";
     }
 
-    @PostMapping("add")
-    public ResponseEntity<ResultDTO> addTask(OAuth2AuthenticationToken auth,
-                                             @RequestBody TaskDTO task) {
-        String email = getEmail(auth);
-        generalService.addTask(email, task);
-
-        return new ResponseEntity<>(new SuccessResult(), HttpStatus.OK);
+    @RequestMapping(value="/infoAboutFlat")
+    String getInfo(){
+        return "infoAboutFlat";
     }
 
-    @PostMapping("delete")
-    public ResponseEntity<ResultDTO> delete(@RequestParam(name = "toDelete[]", required = false) Long[] idList) {
-        generalService.delete(Arrays.asList(idList));
-        return new ResponseEntity<>(new SuccessResult(), HttpStatus.OK);
+
+@GetMapping(value="/registrationFlat")
+public ModelAndView registrationFlat(@RequestParam String address , Model model){
+
+    ModelAndView mod = new ModelAndView("/addFlat");
+        Flat flat = new Flat(address);
+        generalService.saveFlat(flat);
+
+long id = flat.getId();
+
+
+  mod.addObject("id",id);
+    return mod;
     }
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ResultDTO> handleException() {
-        return new ResponseEntity<>(new BadRequestResult(), HttpStatus.BAD_REQUEST);
+    @GetMapping(value="/registrationResident")
+    String registrationResident(@RequestParam("idFlat") Long idFlat,
+                                @RequestParam("resident") String resident
+                                 ){
+
+        List<Citizen> list = new ArrayList<>();
+        list.add(new Citizen(resident));
+
+        Flat flat = generalService.getFlatById(idFlat);
+        flat.setCitizens(list);
+
+        generalService.saveFlat(flat);
+generalService.saveCitizen(new Citizen(resident,flat));
+
+        return "redirect:/";
     }
 
-    private String getEmail(OAuth2AuthenticationToken auth) {
-        return (String) auth.getPrincipal().getAttributes().get("email");
+    @GetMapping(value="/information")
+    ModelAndView information(@RequestParam("idFlat") Long idFlat,Model model){
+
+        ModelAndView mod = new ModelAndView("/infoAboutFlat");
+        Flat flat = generalService.getFlatById(idFlat);
+
+
+mod.addObject("address",flat.getAddress());
+mod.addObject("citizen", generalService.getCitizenByFlatId(idFlat));
+
+        return mod;
     }
+
 }
